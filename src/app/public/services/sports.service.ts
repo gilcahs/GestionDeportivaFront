@@ -4,7 +4,7 @@ import { Deporte, Deportes } from '../interfaces/deporte.interface';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { PistasResponse } from '../interfaces/pistas.interface';
+import { PistasResponse, Reserva } from '../interfaces/pistas.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,8 @@ export class SportsService {
 
   private _pistas?: PistasResponse
 
+  private _lastReserva?: Reserva
+
   get pistas(){
     return { ...this._pistas }
   }
@@ -27,6 +29,10 @@ export class SportsService {
   }
   get deportes() {
     return { ...this._deportes }
+  }
+
+  get lastReserva(){
+    return { ...this._lastReserva}
   }
 
 
@@ -64,6 +70,27 @@ export class SportsService {
           }
         }),
         map( resp => this.pistas),
+        catchError(err => of(err.error.msg))
+      )
+  }
+
+  hacerReserva(reserva: any, pistaId : string){
+    const url = `${this.baseUrl}/pistas/${pistaId}/reserva/`
+    const body = reserva
+    return this.http.post<Reserva>(url, body)
+      .pipe(
+        tap(resp => {
+          console.log(resp);
+          
+         if (resp != null) {
+          resp = this.lastReserva
+
+          console.log(this.lastReserva);
+          
+         }
+          
+        }),
+        map( resp => true),
         catchError(err => of(err.error.msg))
       )
   }

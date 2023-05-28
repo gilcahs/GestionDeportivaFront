@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { formatDate } from '@angular/common';
 import { SportsService } from '../../services/sports.service';
-import { Pista, PistasResponse } from '../../interfaces/pistas.interface';
+import { Pista, PistasResponse, Reserva } from '../../interfaces/pistas.interface';
 import { isEmpty } from 'rxjs';
 import { FormBuilder, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -106,64 +106,132 @@ getYearWeek(date: Date): string {
   return date.getFullYear() + "-" + (Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7) - 1);
 }
 
+
+
+
 canReserve(day: string, hora: string, pista: Pista): boolean {
-  const currentDate = new Date();
-  currentDate.setDate(currentDate.getDate() + (7 * this.currentWeek));
-  const currentDay = this.weekDays[currentDate.getDay() - 1];
-  const currentTime = currentDate.getHours().toString().padStart(2, '0') + ":" + currentDate.getMinutes().toString().padStart(2, '0');
-  const currentYearWeek = this.getYearWeek(currentDate);
   const dayNumbers: { [key: string]: number } = {
+    'Domingo': 0, // Actualizado para coincidir con Date.getDay()
     'Lunes': 1,
     'Martes': 2,
     'Miercoles': 3,
     'Jueves': 4,
     'Viernes': 5,
     'Sabado': 6,
-    'Domingo': 7,
   };
+  
+  const currentDate = new Date();
+  const targetDate = new Date();
+  
+  // Calculamos la diferencia entre el día actual y el día objetivo
+  const dayDiff = dayNumbers[day as keyof typeof dayNumbers] - currentDate.getDay();
 
-  if (this.currentWeek === 0) {   
-    // Comprobar si el día ya pasó
-    if (dayNumbers[day as keyof typeof dayNumbers] < dayNumbers[currentDay as keyof typeof dayNumbers]) {
+  // Si estamos en la misma semana y el día objetivo es anterior al día actual, no podemos reservar
+  if (this.currentWeek === 0 && dayDiff < 0) {
+    return false;
+  }
 
+  // Establecemos la fecha objetivo agregando la diferencia de días a la fecha actual
+  targetDate.setDate(currentDate.getDate() + dayDiff + (7 * this.currentWeek));
+
+  // Ahora que tenemos la fecha objetivo, podemos verificar si la hora ha pasado
+  if (this.currentWeek === 0 && dayDiff === 0) {
+    const [currentHours, currentMinutes] = [currentDate.getHours(), currentDate.getMinutes()];
+    const [horaHours, horaMinutes] = hora.split("-")[0].split(":").map(Number);
+      
+    if (currentHours > horaHours || (currentHours === horaHours && currentMinutes > horaMinutes)) {
       return false;
     }
-  
+  }
 
+  // Ahora revisamos si la pista ya está reservada
+  for (const reserva of pista.reservas!) {
+    const reservaDate = new Date(reserva.fecha!);
     
-    // Comprobar si la hora ya pasó
-    if (day === currentDay) {
-      const [currentHours, currentMinutes] = currentTime.split(":").map(Number);
-      const [horaHours, horaMinutes] = hora.split("-")[0].split(":").map(Number);
+    if (reservaDate.toISOString().slice(0,10) === targetDate.toISOString().slice(0,10)) {
+      const reservaStartTime = reserva.hora!.split("-")[0];
+      const reservaEndTime = reserva.hora!.split("-")[1];
+      const targetStartTime = hora.split("-")[0];
+      const targetEndTime = hora.split("-")[1];
       
-      if (currentHours > horaHours || (currentHours === horaHours && currentMinutes > horaMinutes)) {
+      if ((targetStartTime >= reservaStartTime && targetStartTime < reservaEndTime) || 
+          (targetEndTime > reservaStartTime && targetEndTime <= reservaEndTime) || 
+          (targetStartTime <= reservaStartTime && targetEndTime >= reservaEndTime)) {
         return false;
       }
     }
-  }
-  
-
-
-
-  for (const reserva of pista.reservas!) {
-
-      const reservaDate = new Date(reserva.fecha!);
-      const reservaDay = this.weekDays[reservaDate.getDay() - 1];
-      const reservaHora = reserva.hora;
-      let reservaYearWeek = this.getYearWeek(reservaDate);
-      const yearWeekParts = reservaYearWeek.split("-");
-      const weekNum = parseInt(yearWeekParts[1]);
-      reservaYearWeek = yearWeekParts[0] + "-" + (weekNum - 1).toString();
-
-      if (day === reservaDay && hora === reservaHora && currentYearWeek === reservaYearWeek) {
-          return false;
-      }
-
   }
 
   // Si ninguna de las condiciones anteriores se cumple, se puede reservar
   return true;
 }
+
+
+// canReserve(day: string, hora: string, pista: Pista): boolean {
+//   const currentDate = new Date();
+//   currentDate.setDate(currentDate.getDate() + (7 * this.currentWeek));
+//   const currentDay = this.weekDays[currentDate.getDay() - 1];
+//   const currentTime = currentDate.getHours().toString().padStart(2, '0') + ":" + currentDate.getMinutes().toString().padStart(2, '0');
+//   const currentYearWeek = this.getYearWeek(currentDate);
+//   const dayNumbers: { [key: string]: number } = {
+//     'Lunes': 1,
+//     'Martes': 2,
+//     'Miercoles': 3,
+//     'Jueves': 4,
+//     'Viernes': 5,
+//     'Sabado': 6,
+//     'Domingo': 7,
+//   };
+
+//   if (this.currentWeek === 0) {   
+//     // Comprobar si el día ya pasó
+//     if (dayNumbers[day as keyof typeof dayNumbers] < dayNumbers[currentDay as keyof typeof dayNumbers]) {
+
+//       return false;
+//     }
+  
+
+    
+//     // Comprobar si la hora ya pasó
+//     if (day === currentDay) {
+//       const [currentHours, currentMinutes] = currentTime.split(":").map(Number);
+//       const [horaHours, horaMinutes] = hora.split("-")[0].split(":").map(Number);
+      
+//       if (currentHours > horaHours || (currentHours === horaHours && currentMinutes > horaMinutes)) {
+
+
+//         return false;
+//       }
+//     }
+//   }
+
+
+
+//   const targetDay = this.calculateDate(day);
+//   for (const reserva of pista.reservas!) {
+//     const reservaDate = new Date(reserva.fecha!);
+//     const reservaDay = this.calculateDate(this.weekDays[reservaDate.getUTCDay() - 1]);
+  
+//     // Comprueba si la fecha de la reserva es igual a la fecha del día que quieres reservar
+//     if (targetDay === reservaDay) {
+//       const reservaStartTime = reserva.hora!.split("-")[0];
+//       const reservaEndTime = reserva.hora!.split("-")[1];
+//       const targetStartTime = hora.split("-")[0];
+//       const targetEndTime = hora.split("-")[1];
+  
+//       // Comprueba si el intervalo de tiempo que quieres reservar se superpone con el intervalo de tiempo de alguna reserva existente
+//       if ((targetStartTime >= reservaStartTime && targetStartTime < reservaEndTime) || 
+//           (targetEndTime > reservaStartTime && targetEndTime <= reservaEndTime) || 
+//           (targetStartTime <= reservaStartTime && targetEndTime >= reservaEndTime)) {
+//         return false;
+//       }
+//     }
+//   }
+  
+
+//   // Si ninguna de las condiciones anteriores se cumple, se puede reservar
+//   return true;
+// }
 
 calculateDate(day: string): string {
   const dayIndex = this.weekDays.indexOf(day); // Lunes es 0, Martes es 1, etc.
@@ -200,13 +268,17 @@ async reserve(day: string, hora: string, pista:Pista) {
     return;
   }
 
-  const { value: email } = await Swal.fire({
+  Swal.fire({
     title: 'Realizar reserva',
-    input: 'text',
-    inputLabel: 'Tu correo electrónico',
+    input: 'email',
     inputPlaceholder: 'Introduce tu correo electrónico',
-    inputAttributes: {
-      required: 'true'  // Aquí es donde necesitas cambiar
+    inputValidator: (value) => {
+      // Verificación básica de correo electrónico
+      const regex = /\S+@\S+\.\S+/;
+      if (!regex.test(value)) {
+        return 'Por favor ingresa un correo electrónico válido';
+      }
+      return '';
     },
     showCancelButton: true,
     confirmButtonText: 'Reservar y pagar',
@@ -214,38 +286,55 @@ async reserve(day: string, hora: string, pista:Pista) {
     footer: '<a href="">¿Necesitas ayuda?</a>',
     preConfirm: (email) => {
       if (email) {
-          const fecha = this.calculateDate(day);
-          console.log(fecha);
-          
-          const reserva = {
-            fecha,
-            hora,
-            usuario: email,
-          };
-          console.log(reserva);
-          
-      
-          // Haz algo con 'reserva', como enviarlo a un servidor
-        
+        const fecha = this.calculateDate(day);
+        console.log(fecha);
+    
+        const reserva = {
+          fecha,
+          hora,
+          usuario: email,
+        };
+    
+        return this.sportsService.hacerReserva(reserva, pista.uid!)
+          .toPromise()
+          .then(response => {
+            console.log(response);
+            return response;
+          })
+          .catch(error => {
+            Swal.showValidationMessage(`La reserva falló: ${error}`);
+          });
+      } else {
+        return Promise.reject(new Error('Correo electrónico no proporcionado'));
       }
+    },
+    
+    allowOutsideClick: () => !Swal.isLoading()
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire('Reserva realizada con éxito', '', 'success')
     }
-  })
+  });
   
-
+  
   
 }
+async hacerReserva(reserva:any, pistaId:string){
+  return this.sportsService.hacerReserva(reserva, pistaId)
+}
 
+async pay() {
+  console.log("Haciendo pagos");
+  // const stripe = await this.stripePromise;
+  // const { error, paymentMethod } = await stripe.createPaymentMethod({
+  //   type: 'card',
+  //   card: this.cardElement,
+  // });
 
-
-
-
-
- 
-
-
-
-
-  
-  
-  
+  // if (error) {
+  //   console.log(error);
+  // } else {
+  //   // Send the paymentMethod.id to your server
+  // }
+}
 }
