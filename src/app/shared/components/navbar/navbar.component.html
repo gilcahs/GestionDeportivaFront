@@ -1,0 +1,29 @@
+<mat-toolbar class="light-grey-toolbar">
+
+        <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
+        <span class="ms-1 font-weight-bold">Gilca's Sport Center</span>
+  <span class="spacer"></span>
+  <button mat-icon-button [matMenuTriggerFor]="appMenu">
+    <mat-icon>menu</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-menu #appMenu="matMenu">
+  <button mat-menu-item>
+    <mat-icon>home</mat-icon>
+    <span>Inicio</span>
+  </button>
+  <button mat-menu-item routerLink="/SportCenter/deportes" >
+    <mat-icon>book</mat-icon>
+    <span>Reservas</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon>exercise</mat-icon>
+    <span>Instalaciones</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon>settings</mat-icon>
+    <span>Configuración</span>
+  </button>
+  <!-- Agrega más elementos de menú aquí -->
+</mat-menu>
