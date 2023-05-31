@@ -1,7 +1,6 @@
 export interface PistasResponse {
   pistas?: Pista[];
 }
-
 export interface Pista {
   nombre?:              string;
   horariosDisponibles: HorariosDisponibles;
@@ -9,7 +8,6 @@ export interface Pista {
   reservas?:            Reserva[];
   uid?:                 string;
 }
-
 export interface HorariosDisponibles {
   [day: string]: string[] | undefined;
   Lunes:     any[];
@@ -22,10 +20,6 @@ export interface HorariosDisponibles {
 
 
 }
-
-
-
-
 export interface Reserva {
   fecha?:   Date;
   hora?:    string;

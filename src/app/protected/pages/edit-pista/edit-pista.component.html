@@ -1,0 +1,45 @@
+<div class="container text-center">
+  <h1 class="my-4">Editar {{ pista!.nombre | titlecase }}</h1>
+
+  <div class="d-flex justify-content-center align-items-start flex-wrap">
+    <div class="card m-2" style="width: 18rem;">
+      <div class="card-body">
+        <i class="fas fa-volleyball-ball fa-2x"></i>
+        <h5 class="card-title">{{ pista!.nombre | titlecase }}</h5>
+        <button class="btn btn-danger" (click)="eliminarPista()">Eliminar pista</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <h2>Horarios disponibles para {{ pista!.nombre }}</h2>
+
+    <div *ngFor="let dia of dias">
+      <h3>{{ dia }}</h3>
+      <div class="d-flex align-items-center">
+        <div class="mr-2">
+          <select [(ngModel)]="selectedTimes[dia].horaInicio" (change)="updateHorasFin($event, dia)">
+            <option value="">Seleccionar hora inicio</option>
+            <option *ngFor="let hora of horas" [value]="hora">{{ hora }}</option>
+          </select>
+        </div>
+        <div class="mr-2">
+          <select [(ngModel)]="selectedTimes[dia].horaFin" [disabled]="!selectedTimes[dia].horaInicio">
+            <option value="">Seleccionar hora fin</option>
+            <option *ngFor="let hora of horasFinDisponibles[dia]" [value]="hora">{{ hora }}</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" (click)="addHora(dia)" [disabled]="!selectedTimes[dia].horaInicio || !selectedTimes[dia].horaFin">Añadir horario</button>
+      </div>
+
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let hora of pista!.horariosDisponibles[dia]">
+          {{ hora }}
+          <button class="btn btn-danger float-right" (click)="removeHora(dia, hora)">Eliminar</button>
+        </li>
+      </ul>
+    </div>
+
+    <button class="btn btn-primary mt-4" (click)="guardarCambios()">Guardar cambios</button>
+  </div>
+</div>

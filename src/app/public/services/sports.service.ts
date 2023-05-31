@@ -4,7 +4,7 @@ import { Deporte, Deportes } from '../interfaces/deporte.interface';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { PistasResponse, Reserva } from '../interfaces/pistas.interface';
+import { HorariosDisponibles, Pista, PistasResponse, Reserva } from '../interfaces/pistas.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,12 @@ export class SportsService {
   private _pistas?: PistasResponse
 
   private _lastReserva?: Reserva
+
+  private _pistaSeleccionada?: Pista
+
+  get pistaSeleccionada(){
+    return { ...this._pistaSeleccionada }
+  }
 
   get pistas(){
     return { ...this._pistas }
@@ -93,5 +99,45 @@ export class SportsService {
         map( resp => true),
         catchError(err => of(err.error.msg))
       )
+  }
+
+  horariosPut(pistaId : string, horarios: HorariosDisponibles) {
+    const url = `${this.baseUrl}/pistas/${pistaId}/horarios/`
+
+    const body = {horarios}
+    // Implementar la lógica para actualizar los horarios aquí
+    // Esta es una solicitud PUT de ejemplo
+    return this.http.put<Pista>(url, body)
+      .pipe(
+        tap(resp => {
+          console.log(resp);
+          
+         if (resp != null) {
+          this._pistaSeleccionada = resp
+          
+         }
+      
+        }),
+        map( (resp) => true),
+        catchError(err => of(err.error.msg))
+      )
+  }
+
+  borrarReservas(reservas: Reserva[]) {
+    // Implementar la lógica para borrar las reservas aquí
+    // Esta es una solicitud DELETE de ejemplo
+    const url = '/api/cositas'; // Aquí deberías usar la URL correcta de tu API
+    return this.http.delete(url);
+  }
+  borrarPista(pistaId : string) {
+    // Implementar la lógica para borrar las reservas aquí
+    // Esta es una solicitud DELETE de ejemplo
+    const url = '/api/cositas'; // Aquí deberías usar la URL correcta de tu API
+    return this.http.delete(url);
+  }
+
+  
+  selectPista(pista:Pista){
+    this._pistaSeleccionada = pista
   }
 }

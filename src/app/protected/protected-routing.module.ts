@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { EditPistaComponent } from './edit-pista/edit-pista.component';
+import { EditPistaComponent } from './pages/edit-pista/edit-pista.component';
+import { MainComponent } from './pages/main/main.component';
 
 const routes: Routes = [
 
   {
     path: '',
+    component: MainComponent,
     children: [
-      {path: '', component: EditPistaComponent},
+      {path: 'editpista/:uid', component: EditPistaComponent},
       {path: '**', redirectTo: ''}
     ]
 

@@ -6,6 +6,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SportsComponent } from './pages/sports/sports.component';
 import { PistasByDeporteComponent } from './pages/pistas-by-deporte/pistas-by-deporte.component';
 import { SharedModule } from '../shared/shared.module';
+import { MainComponent } from './pages/main/main.component';
 
 
 
@@ -14,6 +15,7 @@ import { SharedModule } from '../shared/shared.module';
     DashboardComponent,
     SportsComponent,
     PistasByDeporteComponent,
+    MainComponent,
 
   ],
   imports: [

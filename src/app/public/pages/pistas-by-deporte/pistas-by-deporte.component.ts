@@ -1,6 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { formatDate } from '@angular/common';
 import { SportsService } from '../../services/sports.service';
@@ -33,7 +33,7 @@ export class PistasByDeporteComponent implements OnInit {
 
 
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private http: HttpClient, private sportsService: SportsService) { }
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private http: HttpClient, private sportsService: SportsService, private router: Router,) { }
 
   ngOnInit() {
     this.deporteId = this.route.snapshot.paramMap.get('_id')!
@@ -167,71 +167,7 @@ canReserve(day: string, hora: string, pista: Pista): boolean {
 }
 
 
-// canReserve(day: string, hora: string, pista: Pista): boolean {
-//   const currentDate = new Date();
-//   currentDate.setDate(currentDate.getDate() + (7 * this.currentWeek));
-//   const currentDay = this.weekDays[currentDate.getDay() - 1];
-//   const currentTime = currentDate.getHours().toString().padStart(2, '0') + ":" + currentDate.getMinutes().toString().padStart(2, '0');
-//   const currentYearWeek = this.getYearWeek(currentDate);
-//   const dayNumbers: { [key: string]: number } = {
-//     'Lunes': 1,
-//     'Martes': 2,
-//     'Miercoles': 3,
-//     'Jueves': 4,
-//     'Viernes': 5,
-//     'Sabado': 6,
-//     'Domingo': 7,
-//   };
 
-//   if (this.currentWeek === 0) {   
-//     // Comprobar si el día ya pasó
-//     if (dayNumbers[day as keyof typeof dayNumbers] < dayNumbers[currentDay as keyof typeof dayNumbers]) {
-
-//       return false;
-//     }
-  
-
-    
-//     // Comprobar si la hora ya pasó
-//     if (day === currentDay) {
-//       const [currentHours, currentMinutes] = currentTime.split(":").map(Number);
-//       const [horaHours, horaMinutes] = hora.split("-")[0].split(":").map(Number);
-      
-//       if (currentHours > horaHours || (currentHours === horaHours && currentMinutes > horaMinutes)) {
-
-
-//         return false;
-//       }
-//     }
-//   }
-
-
-
-//   const targetDay = this.calculateDate(day);
-//   for (const reserva of pista.reservas!) {
-//     const reservaDate = new Date(reserva.fecha!);
-//     const reservaDay = this.calculateDate(this.weekDays[reservaDate.getUTCDay() - 1]);
-  
-//     // Comprueba si la fecha de la reserva es igual a la fecha del día que quieres reservar
-//     if (targetDay === reservaDay) {
-//       const reservaStartTime = reserva.hora!.split("-")[0];
-//       const reservaEndTime = reserva.hora!.split("-")[1];
-//       const targetStartTime = hora.split("-")[0];
-//       const targetEndTime = hora.split("-")[1];
-  
-//       // Comprueba si el intervalo de tiempo que quieres reservar se superpone con el intervalo de tiempo de alguna reserva existente
-//       if ((targetStartTime >= reservaStartTime && targetStartTime < reservaEndTime) || 
-//           (targetEndTime > reservaStartTime && targetEndTime <= reservaEndTime) || 
-//           (targetStartTime <= reservaStartTime && targetEndTime >= reservaEndTime)) {
-//         return false;
-//       }
-//     }
-//   }
-  
-
-//   // Si ninguna de las condiciones anteriores se cumple, se puede reservar
-//   return true;
-// }
 
 calculateDate(day: string): string {
   const dayIndex = this.weekDays.indexOf(day); // Lunes es 0, Martes es 1, etc.
@@ -320,7 +256,9 @@ async reserve(day: string, hora: string, pista:Pista) {
   
 }
 async hacerReserva(reserva:any, pistaId:string){
-  return this.sportsService.hacerReserva(reserva, pistaId)
+  return this.sportsService.hacerReserva(reserva, pistaId).subscribe(() => {
+    window.location.reload();
+  })
 }
 
 async pay() {
@@ -337,4 +275,12 @@ async pay() {
   //   // Send the paymentMethod.id to your server
   // }
 }
+
+editPista(pista: Pista) {
+
+  this.sportsService.selectPista(pista)
+  
+  this.router.navigate(['/protected/editpista', pista.uid]);
+}
+
 }

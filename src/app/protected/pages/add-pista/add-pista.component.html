@@ -1,0 +1,45 @@
+<div class="container py-5">
+    <h2 class="mb-4">Crear nueva pista</h2>
+    <form [formGroup]="pistaForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" class="form-control" id="nombre" formControlName="nombre" required>
+      </div>
+      <div class="form-group">
+        <label for="deporte">Deporte</label>
+        <select class="form-control" id="deporte" formControlName="deporte" required>
+          <option *ngFor="let deporte of deportes" [value]="deporte.id">{{deporte.nombre}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Horarios disponibles</label>
+        <div formArrayName="horariosDisponibles">
+          <div *ngFor="let dia of dias; let i = index" [formGroupName]="i">
+            <h5 class="mt-4">{{dia}}</h5>
+            <div formArrayName="horarios">
+              <div *ngFor="let horario of getHorarios(dia).controls; let j = index" [formGroupName]="j">
+                <div class="form-row">
+                  <div class="form-group col-md-5">
+                    <label for="inicio">Inicio</label>
+                    <input type="time" id="inicio" formControlName="inicio" class="form-control" required>
+                  </div>
+                  <div class="form-group col-md-5">
+                    <label for="fin">Fin</label>
+                    <input type="time" id="fin" formControlName="fin" class="form-control" required>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <button type="button" class="btn btn-danger mt-4" (click)="deleteHorario(dia, j)">Eliminar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group mt-3">
+              <button type="button" class="btn btn-success" (click)="addHorario(dia)">Añadir horario</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary mt-4">Crear Pista</button>
+    </form>
+  </div>
+  

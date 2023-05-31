@@ -1,42 +1,5 @@
 
 
-<!-- Cards de las pistas -->
-<!-- <div class="d-flex flex-row align-items-center justify-content-center">
-  <div *ngFor="let pista of pistas!.pistas" class="card my-3" style="width: 18rem;" (click)="selectPista(pista.uid!)">
-    <div class="card-body d-flex align-items-center">
-      <i class="fas fa-basketball-ball mr-3"></i> 
-      <h5 class="card-title">{{ pista.nombre }}</h5>
-    </div>
-  </div>
-</div> -->
-
-<!-- Tablas de horarios -->
-<!-- <div *ngFor="let pista of pistas!.pistas">
-  <div class="table-responsive" *ngIf="selectedPistaId === pista.uid">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">{{ pista.nombre }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let day of weekDays" class="border-bottom">
-          <th scope="row">{{ day }}</th>
-          <td>
-            <ng-container *ngIf="pista.horariosDisponibles?.[day]">
-              <button class="btn btn-primary btn-block" *ngFor="let hora of pista.horariosDisponibles[day]" [disabled]="!canReserve(day, hora, pista)">{{ hora }}</button>
-
-            </ng-container>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div> -->
-
-
-
-
 
 <div class="container text-center">
   <h1 class="my-4">Seleccione la pista que desea reservar</h1>
@@ -50,6 +13,7 @@
           <i class="fas fa-volleyball-ball fa-2x"></i>
           <h5 class="card-title">{{ pista.nombre | titlecase }}</h5>
           <button class="btn btn-primary" (click)="selectPista(pista.uid!)">Seleccionar</button>
+          <button class="btn btn-warning" (click)="editPista(pista)">Editar</button>
         </div>
       </div>
     </div>
