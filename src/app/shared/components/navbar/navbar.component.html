@@ -26,4 +26,24 @@
     <span>Configuración</span>
   </button>
   <!-- Agrega más elementos de menú aquí -->
+  <!-- El nuevo elemento de menú con un submenú -->
+  <button mat-menu-item [matMenuTriggerFor]="adminMenu">
+    <mat-icon>admin_panel_settings</mat-icon> <!-- Cambia este icono por el que desees -->
+    <span>Administración</span>
+  </button>
+  <mat-menu #adminMenu="matMenu">
+    <button mat-menu-item routerLink="/Admin/gestionDeportes">
+      <mat-icon>sports_soccer</mat-icon> <!-- Cambia estos iconos por los que desees -->
+      <span>Gestionar Deportes</span>
+    </button>
+    <button mat-menu-item routerLink="/protected/addPista">
+      <mat-icon>directions_run</mat-icon>
+      <span>Gestionar Pistas</span>
+    </button>
+    <button mat-menu-item routerLink="/Admin/gestionReservas">
+      <mat-icon>book_online</mat-icon>
+      <span>Gestionar Reservas</span>
+    </button>
+  </mat-menu>
+
 </mat-menu>

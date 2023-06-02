@@ -8,7 +8,7 @@
       <div class="form-group">
         <label for="deporte">Deporte</label>
         <select class="form-control" id="deporte" formControlName="deporte" required>
-          <option *ngFor="let deporte of deportes" [value]="deporte.id">{{deporte.nombre}}</option>
+          <option *ngFor="let deporte of deportes?.deportes" [value]="deporte._id">{{deporte.nombre}}</option>
         </select>
       </div>
       <div class="form-group">

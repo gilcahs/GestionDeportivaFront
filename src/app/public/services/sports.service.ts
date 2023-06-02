@@ -135,6 +135,25 @@ export class SportsService {
     const url = '/api/cositas'; // Aquí deberías usar la URL correcta de tu API
     return this.http.delete(url);
   }
+  postDeporte(body: any){
+
+  }
+  postPista(body: any){
+    const url = `${this.baseUrl}/pistas/`
+    return this.http.post<Pista>(url,body)
+    .pipe(
+      tap(resp => {
+        console.log(resp);
+        
+       if (resp != null) {
+        this._pistaSeleccionada = resp
+       }
+    
+      }),
+      map( (resp) => true),
+      catchError(err => of(err.error.msg))
+    )
+  }
 
   
   selectPista(pista:Pista){
