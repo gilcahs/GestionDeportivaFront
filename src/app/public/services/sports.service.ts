@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Deporte, Deportes } from '../interfaces/deporte.interface';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { HorariosDisponibles, Pista, PistasResponse, Reserva } from '../interfaces/pistas.interface';
@@ -87,14 +87,14 @@ export class SportsService {
       .pipe(
         tap(resp => {
           console.log(resp);
-          
+
          if (resp != null) {
           resp = this.lastReserva
 
           console.log(this.lastReserva);
-          
+
          }
-          
+
         }),
         map( resp => true),
         catchError(err => of(err.error.msg))
@@ -111,12 +111,12 @@ export class SportsService {
       .pipe(
         tap(resp => {
           console.log(resp);
-          
+
          if (resp != null) {
           this._pistaSeleccionada = resp
-          
+
          }
-      
+
         }),
         map( (resp) => true),
         catchError(err => of(err.error.msg))
@@ -124,16 +124,50 @@ export class SportsService {
   }
 
   borrarReservas(reservas: Reserva[]) {
-    // Implementar la lógica para borrar las reservas aquí
-    // Esta es una solicitud DELETE de ejemplo
-    const url = '/api/cositas'; // Aquí deberías usar la URL correcta de tu API
-    return this.http.delete(url);
+    const url = `${this.baseUrl}/pistas/deleteReservas`
+    const body = {reservas}
+
+    return this.http.post(url, body)
+      .pipe(
+        tap(resp => {
+          console.log(resp);
+
+         if (resp != null) {
+
+          console.log(resp);
+
+
+
+         }
+
+        }),
+        map( (resp) => true),
+        catchError(err => {
+          console.log(err);
+
+          return of(err.error.msg)})
+      )
   }
+
   borrarPista(pistaId : string) {
-    // Implementar la lógica para borrar las reservas aquí
-    // Esta es una solicitud DELETE de ejemplo
-    const url = '/api/cositas'; // Aquí deberías usar la URL correcta de tu API
-    return this.http.delete(url);
+    const url = `${this.baseUrl}/pistas/deletePista/${pistaId}`
+    return this.http.delete(url)
+    .pipe(
+      tap(resp => {
+        console.log(resp);
+
+       if (resp != null) {
+
+        console.log(resp);
+
+
+
+       }
+
+      }),
+      map( (resp) => true),
+      catchError(err => of(err.error.msg))
+    )
   }
   postDeporte(body: any){
 
@@ -144,18 +178,18 @@ export class SportsService {
     .pipe(
       tap(resp => {
         console.log(resp);
-        
+
        if (resp != null) {
         this._pistaSeleccionada = resp
        }
-    
+
       }),
       map( (resp) => true),
       catchError(err => of(err.error.msg))
     )
   }
 
-  
+
   selectPista(pista:Pista){
     this._pistaSeleccionada = pista
   }

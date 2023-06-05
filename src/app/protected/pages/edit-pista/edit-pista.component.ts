@@ -68,19 +68,19 @@ export class EditPistaComponent implements OnInit {
     if (!this.pista.horariosDisponibles[dia]) {
       return;
     }
-  
+
     for (let i = 0; i < this.pista.horariosDisponibles[dia].length; i++) {
       const range = this.pista.horariosDisponibles[dia][i].split('-');
       const startIndex = this.horas.indexOf(range[0]);
       const endIndex = this.horas.indexOf(range[1]);
-  
+
       this.horasFinDisponibles[dia] = this.horasFinDisponibles[dia].filter(hora => {
         const horaIndex = this.horas.indexOf(hora);
         return horaIndex <= startIndex || horaIndex >= endIndex;
       });
     }
   }
-  
+
 
   addHora(dia: string): void {
     if (!this.isValidTimeRange(this.selectedTimes[dia].horaInicio!, this.selectedTimes[dia].horaFin!)) {
@@ -113,7 +113,7 @@ export class EditPistaComponent implements OnInit {
   this.pista.horariosDisponibles[dia].push(newHora);
   }
 
-  
+
 removeHora(dia: string, hora: string): void {
   // Get today's date
   const today = new Date();
@@ -152,7 +152,7 @@ removeHora(dia: string, hora: string): void {
         }
         this.reservasFuturas.push(...reservasToLog!);
         console.log(this.reservasFuturas);
-        
+
       }
     })
   } else {
@@ -163,10 +163,10 @@ removeHora(dia: string, hora: string): void {
     }
   }
 }
-  
-  
 
-  
+
+
+
 guardarCambios(): void {
   Swal.fire({
     title: '¿Estás seguro?',
@@ -182,18 +182,23 @@ guardarCambios(): void {
     if (result.isConfirmed) {
       // If the user confirmed, save the changes
       if (this.reservasFuturas.length > 0) {
-        this.sportService.borrarReservas(this.reservasFuturas).subscribe(() => {
-          this.sportService.horariosPut(this.pista.uid ,this.pista.horariosDisponibles).subscribe(() => {
-            // Aquí podrías navegar a la vista anterior o mostrar algún mensaje de éxito
-            Swal.fire({
-              position: 'top-end',
-              icon: 'success',
-              title: 'Los cambios se han guardado',
-              showConfirmButton: false,
-              timer: 1500
+        this.sportService.borrarReservas(this.reservasFuturas).subscribe(resp => {
+          if (resp === true) {
+            this.sportService.horariosPut(this.pista.uid ,this.pista.horariosDisponibles).subscribe(() => {
+              // Aquí podrías navegar a la vista anterior o mostrar algún mensaje de éxito
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Los cambios se han guardado',
+                showConfirmButton: false,
+                timer: 1500
+              });
+              this.router.navigate(['/SportCenter/sports']);
             });
-            this.router.navigate(['/SportCenter/sports']);
-          });
+          }else {
+            Swal.fire('Error', resp, 'error')
+          }
+
         });
       } else {
         this.sportService.horariosPut(this.pista.uid, this.pista.horariosDisponibles).subscribe(() => {
@@ -237,11 +242,17 @@ eliminarPista(): void {
         }).then((result) => {
           if (result.isConfirmed) {
             this.reservasFuturas = reservasPosteriorFechaActual;
-            this.sportService.borrarReservas(this.reservasFuturas).subscribe(() => {
-              this.sportService.borrarPista(this.pista.uid!).subscribe(() => {
-                Swal.fire('Eliminado!', 'La pista y las reservas han sido eliminadas.', 'success');
-                this.router.navigate(['/SportCenter/sports']);
-              });
+            this.sportService.borrarReservas(this.reservasFuturas).subscribe(resp => {
+
+              if (resp === true) {
+                this.sportService.borrarPista(this.pista.uid!).subscribe(() => {
+                  Swal.fire('Eliminado!', 'La pista y las reservas han sido eliminadas.', 'success');
+                  this.router.navigate(['/SportCenter/sports']);
+                });
+              }else {
+                Swal.fire('Error', resp, 'error')
+              }
+
             });
           }
         });
@@ -256,5 +267,5 @@ eliminarPista(): void {
 }
 
 
-  
+
 }

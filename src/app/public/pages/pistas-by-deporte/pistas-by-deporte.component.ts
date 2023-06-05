@@ -20,7 +20,7 @@ export class PistasByDeporteComponent implements OnInit {
   weekDays: string[] = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
   currentDate: Date = new Date();
   selectedPistaId?: string;
-  currentWeek: number = 0; 
+  currentWeek: number = 0;
 
   reservaForm = this.fb.group({
     fecha: ['', Validators.required],
@@ -28,7 +28,7 @@ export class PistasByDeporteComponent implements OnInit {
     usuario: ['', [Validators.required, Validators.email]],
   });
 
-  
+
 
 
 
@@ -55,9 +55,9 @@ export class PistasByDeporteComponent implements OnInit {
   nextWeek() {
     if (this.currentWeek <= 4) {
       this.currentWeek++;
-      
+
     }
-    
+
   }
 
   prevWeek() {
@@ -85,20 +85,20 @@ export class PistasByDeporteComponent implements OnInit {
       nombre =  pista ? pista.nombre! : '';
     }
     return nombre
-    
+
   }
 
   getWeekRange(): string {
     const startOfWeek = new Date(this.currentDate);
     startOfWeek.setDate(this.currentDate.getDate() - this.currentDate.getDay() + (7 * this.currentWeek));
-    
+
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6);
-    
+
     return formatDate(startOfWeek, 'dd/MM', 'en-US') + " al " + formatDate(endOfWeek, 'dd/MM', 'en-US');
   }
 
- 
+
 
 getYearWeek(date: Date): string {
   const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
@@ -119,10 +119,10 @@ canReserve(day: string, hora: string, pista: Pista): boolean {
     'Viernes': 5,
     'Sabado': 6,
   };
-  
+
   const currentDate = new Date();
   const targetDate = new Date();
-  
+
   // Calculamos la diferencia entre el día actual y el día objetivo
   const dayDiff = dayNumbers[day as keyof typeof dayNumbers] - currentDate.getDay();
 
@@ -138,7 +138,7 @@ canReserve(day: string, hora: string, pista: Pista): boolean {
   if (this.currentWeek === 0 && dayDiff === 0) {
     const [currentHours, currentMinutes] = [currentDate.getHours(), currentDate.getMinutes()];
     const [horaHours, horaMinutes] = hora.split("-")[0].split(":").map(Number);
-      
+
     if (currentHours > horaHours || (currentHours === horaHours && currentMinutes > horaMinutes)) {
       return false;
     }
@@ -147,15 +147,15 @@ canReserve(day: string, hora: string, pista: Pista): boolean {
   // Ahora revisamos si la pista ya está reservada
   for (const reserva of pista.reservas!) {
     const reservaDate = new Date(reserva.fecha!);
-    
+
     if (reservaDate.toISOString().slice(0,10) === targetDate.toISOString().slice(0,10)) {
       const reservaStartTime = reserva.hora!.split("-")[0];
       const reservaEndTime = reserva.hora!.split("-")[1];
       const targetStartTime = hora.split("-")[0];
       const targetEndTime = hora.split("-")[1];
-      
-      if ((targetStartTime >= reservaStartTime && targetStartTime < reservaEndTime) || 
-          (targetEndTime > reservaStartTime && targetEndTime <= reservaEndTime) || 
+
+      if ((targetStartTime >= reservaStartTime && targetStartTime < reservaEndTime) ||
+          (targetEndTime > reservaStartTime && targetEndTime <= reservaEndTime) ||
           (targetStartTime <= reservaStartTime && targetEndTime >= reservaEndTime)) {
         return false;
       }
@@ -172,18 +172,18 @@ canReserve(day: string, hora: string, pista: Pista): boolean {
 calculateDate(day: string): string {
   const dayIndex = this.weekDays.indexOf(day); // Lunes es 0, Martes es 1, etc.
   let todayIndex = new Date().getDay() - 1; // getDay() devuelve 0 para Domingo, 1 para Lunes, etc.
-  
+
   // Ajustamos el índice del día actual para que coincida con tu array `weekDays`
   if (todayIndex < 0) {
     todayIndex = 6; // Si es domingo, ajustamos el índice a 6
   }
-  
+
   let daysToAdd = dayIndex - todayIndex + (7 * this.currentWeek);
-  
+
   if (daysToAdd < 0) {
     daysToAdd += 7;
   }
-  
+
   const targetDate = new Date();
   targetDate.setDate(targetDate.getDate() + daysToAdd);
 
@@ -192,7 +192,7 @@ calculateDate(day: string): string {
   const dayReal = targetDate.getDate();
 
   return `${year}-${month.toString().padStart(2, '0')}-${dayReal.toString().padStart(2, '0')}`;
- 
+
 }
 
 
@@ -224,13 +224,13 @@ async reserve(day: string, hora: string, pista:Pista) {
       if (email) {
         const fecha = this.calculateDate(day);
         console.log(fecha);
-    
+
         const reserva = {
           fecha,
           hora,
           usuario: email,
         };
-    
+
         return this.sportsService.hacerReserva(reserva, pista.uid!)
           .toPromise()
           .then(response => {
@@ -244,16 +244,16 @@ async reserve(day: string, hora: string, pista:Pista) {
         return Promise.reject(new Error('Correo electrónico no proporcionado'));
       }
     },
-    
+
     allowOutsideClick: () => !Swal.isLoading()
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire('Reserva realizada con éxito', '', 'success')
     }
   });
-  
-  
-  
+
+
+
 }
 async hacerReserva(reserva:any, pistaId:string){
   return this.sportsService.hacerReserva(reserva, pistaId).subscribe(() => {
@@ -279,7 +279,7 @@ async pay() {
 editPista(pista: Pista) {
 
   this.sportsService.selectPista(pista)
-  
+
   this.router.navigate(['/protected/editpista', pista.uid]);
 }
 
