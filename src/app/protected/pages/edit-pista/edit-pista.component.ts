@@ -41,6 +41,7 @@ export class EditPistaComponent implements OnInit {
     'Sabado': [],
     'Domingo': [],
   };
+  horaInicioError: boolean = false;
 
   constructor(private sportService: SportsService, private router: Router) { }
 
@@ -48,13 +49,34 @@ export class EditPistaComponent implements OnInit {
     this.pista = this.sportService.pistaSeleccionada;
   }
 
-  updateHorasFin(event: Event, dia: string): void {
-    const selectElement = event.target as HTMLSelectElement;
-    this.selectedTimes[dia].horaInicio = selectElement.value;
-    const index = this.horas.indexOf(this.selectedTimes[dia].horaInicio!);
-    this.horasFinDisponibles[dia] = this.horas.slice(index + 1);
-    this.filterUnavailableTimes(dia);
+  // updateHorasFin( dia: string): void { //event: Event,
+  //   //const selectElement = event.target as HTMLSelectElement;
+  //   //this.selectedTimes[dia].horaInicio = selectElement.value;
+  //   // Acceder a selectedTimes[dia].horaInicio directamente
+  // let horaInicio = this.selectedTimes[dia].horaInicio;
+  //   const index = this.horas.indexOf(horaInicio!);
+  //   this.horasFinDisponibles[dia] = this.horas.slice(index + 1);
+  //   this.filterUnavailableTimes(dia);
+  // }
+  updateHorasFin(dia: string): void {
+    // Tomar la hora de inicio seleccionada
+    let horaInicio = this.selectedTimes[dia].horaInicio;
+  
+    // Comprobar si se ha seleccionado una hora de inicio
+    if (horaInicio) {
+    
+  
+      // Tomar la hora de fin seleccionada
+      let horaFin = this.selectedTimes[dia].horaFin;
+  
+      // Comprobar si se ha seleccionado una hora de fin
+      
+  
+      // Crear un nuevo array de horas fin disponibles que solo contiene horas posteriores a la hora de inicio
+      this.horasFinDisponibles[dia] = this.horas.filter(hora => hora > horaInicio!);
+    }
   }
+  
 
   updateHoraFin(event: Event, dia: string): void {
     const selectElement = event.target as HTMLSelectElement;
@@ -97,15 +119,35 @@ export class EditPistaComponent implements OnInit {
   }
 
   // Verificar si las horas seleccionadas se solapan con un horario existente
-  const newHoraInicio = Number(this.selectedTimes[dia].horaInicio!.split(':')[0]);
-  const newHoraFin = Number(this.selectedTimes[dia].horaFin!.split(':')[0]);
-  for (let hora of this.pista.horariosDisponibles[dia]) {
-    const [horaInicio, horaFin] = hora.split('-').map((h: string) => Number(h.split(':')[0]));
-    if ((newHoraInicio >= horaInicio && newHoraInicio < horaFin) || (newHoraFin > horaInicio && newHoraFin <= horaFin)) {
-      alert('Las horas seleccionadas se solapan con un horario existente.');
-      return;
-    }
+const [newHoraInicioHours, newHoraInicioMinutes] = this.selectedTimes[dia].horaInicio!.split(':').map(Number);
+const [newHoraFinHours, newHoraFinMinutes] = this.selectedTimes[dia].horaFin!.split(':').map(Number);
+const newHoraInicioInMinutes = newHoraInicioHours * 60 + newHoraInicioMinutes;
+const newHoraFinInMinutes = newHoraFinHours * 60 + newHoraFinMinutes;
+
+for (let hora of this.pista.horariosDisponibles[dia]) {
+  const [horaInicio, horaFin] = hora.split('-').map((h: string) => {
+    const [hours, minutes] = h.split(':').map(Number);
+    return hours * 60 + minutes;
+  });
+
+  if ((newHoraInicioInMinutes >= horaInicio && newHoraInicioInMinutes < horaFin) || 
+      (newHoraFinInMinutes > horaInicio && newHoraFinInMinutes <= horaFin)) {
+    alert('Las horas seleccionadas se solapan con un horario existente.');
+    return;
   }
+}
+
+
+  // Verificar si las horas seleccionadas se solapan con un horario existente
+  // const newHoraInicio = Number(this.selectedTimes[dia].horaInicio!.split(':')[0]);
+  // const newHoraFin = Number(this.selectedTimes[dia].horaFin!.split(':')[0]);
+  // for (let hora of this.pista.horariosDisponibles[dia]) {
+  //   const [horaInicio, horaFin] = hora.split('-').map((h: string) => Number(h.split(':')[0]));
+  //   if ((newHoraInicio >= horaInicio && newHoraInicio < horaFin) || (newHoraFin > horaInicio && newHoraFin <= horaFin)) {
+  //     alert('Las horas seleccionadas se solapan con un horario existente.');
+  //     return;
+  //   }
+  // }
 
   if (!this.pista.horariosDisponibles[dia]) {
     this.pista.horariosDisponibles[dia] = [];

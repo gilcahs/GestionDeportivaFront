@@ -248,7 +248,8 @@ async reserve(day: string, hora: string, pista:Pista) {
     allowOutsideClick: () => !Swal.isLoading()
   }).then((result) => {
     if (result.isConfirmed) {
-      Swal.fire('Reserva realizada con éxito', '', 'success')
+      Swal.fire('Reserva realizada con éxito', '', 'success').then(() => window.location.reload())
+      
     }
   });
 

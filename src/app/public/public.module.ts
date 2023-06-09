@@ -7,6 +7,10 @@ import { SportsComponent } from './pages/sports/sports.component';
 import { PistasByDeporteComponent } from './pages/pistas-by-deporte/pistas-by-deporte.component';
 import { SharedModule } from '../shared/shared.module';
 import { MainComponent } from './pages/main/main.component';
+import { InstalacionesComponent } from './pages/instalaciones/instalaciones.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -16,12 +20,16 @@ import { MainComponent } from './pages/main/main.component';
     SportsComponent,
     PistasByDeporteComponent,
     MainComponent,
+    InstalacionesComponent,
 
   ],
   imports: [
     CommonModule,
     PublicRoutingModule,
-    SharedModule
+    SharedModule,
+    MatGridListModule,
+    MatCardModule,
+    MatButtonModule
   ]
 })
 export class PublicModule { }

@@ -25,6 +25,7 @@ export interface Reserva {
   hora?:    string;
   usuario?: string;
   pista?:   string;
+  cancelada?: boolean;
   _id?:     string;
 }
 

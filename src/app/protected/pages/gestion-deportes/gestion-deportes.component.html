@@ -1,0 +1,38 @@
+<div class="container">
+  <h1 class="title">Administración de Deportes</h1>
+  <p class="description">Aquí puedes gestionar los deportes disponibles en nuestra plataforma. Puedes agregar, editar o eliminar deportes según sea necesario.</p>
+
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="openAddSportDialog()">
+      <mat-icon>add</mat-icon>
+      Añadir Deporte
+    </button>
+  </div>
+  <table mat-table [dataSource]="deportes!.deportes!" class="mat-elevation-z8">
+
+    <!-- Nombre Column -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let deporte"> {{deporte.nombre}} </td>
+    </ng-container>
+
+    <!-- Icono Column -->
+    <ng-container matColumnDef="icono">
+      <th mat-header-cell *matHeaderCellDef> Icono </th>
+      <td mat-cell *matCellDef="let deporte"> {{deporte.icono}} </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let deporte">
+        <button mat-button (click)="editDeporte(deporte)">EDITAR</button>
+        <button mat-button (click)="deleteDeporte(deporte._id)">BORRAR</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+</div>

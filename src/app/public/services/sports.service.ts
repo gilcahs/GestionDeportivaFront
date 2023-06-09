@@ -21,6 +21,7 @@ export class SportsService {
   private _lastReserva?: Reserva
 
   private _pistaSeleccionada?: Pista
+  private reservas?: Reserva[]
 
   get pistaSeleccionada(){
     return { ...this._pistaSeleccionada }
@@ -169,7 +170,25 @@ export class SportsService {
       catchError(err => of(err.error.msg))
     )
   }
-  postDeporte(body: any){
+  addDeporte(body: any){
+    const url = `${this.baseUrl}/deportes/`
+    return this.http.post(url, body)
+    .pipe(
+      tap(resp => {
+        console.log(resp);
+
+       if (resp != null) {
+
+        console.log(resp);
+
+
+
+       }
+
+      }),
+      map( (resp) => true),
+      catchError(err => of(err.error.msg))
+    )
 
   }
   postPista(body: any){
@@ -181,6 +200,92 @@ export class SportsService {
 
        if (resp != null) {
         this._pistaSeleccionada = resp
+       }
+
+      }),
+      map( (resp) => true),
+      catchError(err => of(err.error.msg))
+    )
+  }
+  deleteDeporte(deporteId:string){
+    const url = `${this.baseUrl}/deportes/${deporteId}`
+    return this.http.delete(url)
+    .pipe(
+      tap(resp => {
+        console.log(resp);
+
+       if (resp != null) {
+
+        console.log(resp);
+
+
+
+       }
+
+      }),
+      map( (resp) => true),
+      catchError(err => of(err.error.msg))
+    )
+  }
+  patchDeporte(deporteId:string, body:any){
+    const url = `${this.baseUrl}/deportes/${deporteId}`
+    console.log(body);
+    
+    return this.http.patch(url, body)
+    .pipe(
+      tap(resp => {
+        console.log(resp);
+
+       if (resp != null) {
+
+        console.log(resp);
+
+
+
+       }
+
+      }),
+      map( (resp) => true),
+      catchError(err => of(err.error.msg))
+    )
+  }
+
+  getReservas(){
+    const url = `${this.baseUrl}/pistas/reservas/verReservas/allReservas`
+    return this.http.get<Reserva[]>(url)
+      .pipe(
+        tap(resp => {
+          console.log(resp);
+
+        if (resp != null) {
+
+          this.reservas = resp
+
+
+
+        }
+
+        }),
+        map( (resp) => this.reservas),
+        catchError(err => of(err.error.msg))
+      )
+  }
+
+  deleteReserva(id: string){
+    const url = `${this.baseUrl}/pistas/reservas/${id}`
+    console.log(url);
+    
+    return this.http.delete(url)
+    .pipe(
+      tap(resp => {
+        console.log(resp);
+
+       if (resp != null) {
+
+        console.log(resp);
+
+
+
        }
 
       }),

@@ -18,18 +18,16 @@
       <h3>{{ dia }}</h3>
       <div class="d-flex align-items-center">
         <div class="mr-2">
-          <select [(ngModel)]="selectedTimes[dia].horaInicio" (change)="updateHorasFin($event, dia)">
-            <option value="">Seleccionar hora inicio</option>
-            <option *ngFor="let hora of horas" [value]="hora">{{ hora }}</option>
-          </select>
+          <input type="time" [(ngModel)]="selectedTimes[dia].horaInicio" (change)="updateHorasFin(dia)">
         </div>
         <div class="mr-2">
-          <select [(ngModel)]="selectedTimes[dia].horaFin" [disabled]="!selectedTimes[dia].horaInicio">
-            <option value="">Seleccionar hora fin</option>
-            <option *ngFor="let hora of horasFinDisponibles[dia]" [value]="hora">{{ hora }}</option>
-          </select>
+          <input type="time" [(ngModel)]="selectedTimes[dia].horaFin" [disabled]="!selectedTimes[dia].horaInicio">
         </div>
+        <!-- <div *ngIf="horaInicioError" class="alert alert-danger">
+          La hora de inicio no puede ser posterior a la hora de fin.
+        </div> -->
         <button class="btn btn-primary" (click)="addHora(dia)" [disabled]="!selectedTimes[dia].horaInicio || !selectedTimes[dia].horaFin">Añadir horario</button>
+        
       </div>
 
       <ul class="list-group">

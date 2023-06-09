@@ -1,0 +1,24 @@
+<!-- app.component.html -->
+
+<h1>Bienvenido a nuestro polideportivo</h1>
+<p class="intro">Ofrecemos una amplia gama de instalaciones para todos tus deportes favoritos. Desde una piscina olímpica hasta una cancha de fútbol de tamaño completo, tenemos algo para cada atleta. Explora nuestras instalaciones a continuación:</p>
+
+
+<mat-grid-list cols="2" rowHeight="500px">
+    <mat-grid-tile *ngFor="let installation of installations">
+      <a >
+        <mat-card class="installation-card">
+          <img mat-card-image [src]="installation.image" alt="{{ installation.name }}">
+          <mat-card-content>
+            <h2>{{ installation.name }}</h2>
+            <p>{{ installation.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </a>
+    </mat-grid-tile>
+  </mat-grid-list>
+<h2>Horario de apertura</h2>
+<p>Estamos abiertos todos los días de la semana, desde las 6:00 de la mañana hasta las 10:00 de la noche. Nuestras instalaciones están diseñadas para ofrecerte la máxima comodidad y seguridad, con vestuarios limpios y modernos, y personal amable y servicial que está siempre a tu disposición para ayudarte.</p>
+
+<h2>Contacto</h2>
+<p>Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos. Estamos disponibles por teléfono al 123-456-7890 o por correo electrónico a info@polideportivo.com. Nuestro equipo está siempre listo para ayudarte con cualquier consulta que puedas tener.</p>

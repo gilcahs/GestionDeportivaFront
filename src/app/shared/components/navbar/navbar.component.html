@@ -17,7 +17,7 @@
     <mat-icon>book</mat-icon>
     <span>Reservas</span>
   </button>
-  <button mat-menu-item>
+  <button mat-menu-item routerLink="/SportCenter/instalaciones">
     <mat-icon>exercise</mat-icon>
     <span>Instalaciones</span>
   </button>
@@ -32,7 +32,7 @@
     <span>Administración</span>
   </button>
   <mat-menu #adminMenu="matMenu">
-    <button mat-menu-item routerLink="/Admin/gestionDeportes">
+    <button mat-menu-item routerLink="/protected/gestionDeportes">
       <mat-icon>sports_soccer</mat-icon> <!-- Cambia estos iconos por los que desees -->
       <span>Gestionar Deportes</span>
     </button>
@@ -40,7 +40,7 @@
       <mat-icon>directions_run</mat-icon>
       <span>Gestionar Pistas</span>
     </button>
-    <button mat-menu-item routerLink="/Admin/gestionReservas">
+    <button mat-menu-item routerLink="/protected/gestionReservas">
       <mat-icon>book_online</mat-icon>
       <span>Gestionar Reservas</span>
     </button>
