@@ -5,7 +5,7 @@
   <h1 class="my-4">Seleccione la pista que desea reservar</h1>
 
   <div class="d-flex justify-content-around align-items-center">
-    
+
 
     <div class="d-flex flex-row justify-content-center align-items-start flex-wrap">
       <div class="card m-2" style="width: 18rem;" *ngFor="let pista of pistas?.pistas ">
@@ -13,12 +13,12 @@
           <i class="fas fa-volleyball-ball fa-2x"></i>
           <h5 class="card-title">{{ pista.nombre | titlecase }}</h5>
           <button class="btn btn-primary" (click)="selectPista(pista.uid!)">Seleccionar</button>
-          <button class="btn btn-warning" (click)="editPista(pista)">Editar</button>
+          <button class="btn btn-warning" (click)="editPista(pista)" *ngIf="validate == true">Editar</button>
         </div>
       </div>
     </div>
 
-    
+
   </div>
   <button class="btn btn-primary" (click)="prevWeek()" *ngIf="selectedPistaId">Semana anterior</button>
   <button class="btn btn-primary" (click)="nextWeek()" *ngIf="selectedPistaId">Siguiente semana</button>
@@ -43,7 +43,7 @@
               <td>
                 <ng-container *ngIf="pista.horariosDisponibles?.[day]">
                   <button class="btn btn-primary btn-block" *ngFor="let hora of pista.horariosDisponibles[day]" [disabled]="!canReserve(day, hora, pista)" (click)="reserve(day, hora, pista)">{{ hora }}</button>
-    
+
                 </ng-container>
               </td>
             </tr>
@@ -51,7 +51,7 @@
         </table>
       </div>
     </div>
-    
+
 
 
   </div>

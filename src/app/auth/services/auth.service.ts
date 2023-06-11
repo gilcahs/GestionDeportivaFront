@@ -12,7 +12,7 @@ export class AuthService {
 
   private baseUrl: string = environment.baseUrl
 
-  private _usuario!: Usuario;
+  private _usuario?: Usuario;
 
   get usuario() {
     return { ...this._usuario }
@@ -31,10 +31,11 @@ export class AuthService {
           localStorage.setItem('x-token', resp.token!)
           this._usuario = {
             nombre: resp.usuario.nombre,
+            rol: resp.usuario.rol,
             uid: resp.usuario.uid
           }
          }
-          
+
         }),
         map( resp => true),
         catchError(err => of(err.error.msg))
@@ -55,7 +56,7 @@ export class AuthService {
         catchError(err => {
           console.log(err);
           console.log(err.error.errors[0].msg);
-          
+
           return of(err.error.errors[0].msg)})
       )
 
@@ -70,20 +71,26 @@ export class AuthService {
       .pipe(
         map( resp => {
           console.log(resp.token);
-          
+
           localStorage.setItem('x-token', resp.token!)
           this._usuario = {
             nombre: resp.usuario.nombre,
-            uid: resp.usuario.uid
+            uid: resp.usuario.uid,
+            rol: resp.usuario.rol
+
           }
           return resp != null
         }),
         catchError( err => of(false) )
       )
-      
+
+  }
+  isAdmin(): Boolean{
+    return this._usuario?.rol == 'ADMIN_ROLE'
   }
 
   logout() {
     localStorage.removeItem('x-token');
+    this._usuario = undefined
   }
 }

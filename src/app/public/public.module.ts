@@ -20,6 +20,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { EventosComponent } from './pages/eventos/eventos.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { AboutUSComponent } from './pages/about-us/about-us.component';
+
 
 
 
@@ -33,7 +36,8 @@ import { EventosComponent } from './pages/eventos/eventos.component';
     MainComponent,
     InstalacionesComponent,
     EventosComponent,
-    
+    AboutUSComponent,
+
 
   ],
   imports: [
@@ -49,7 +53,8 @@ import { EventosComponent } from './pages/eventos/eventos.component';
     MatFormFieldModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSelectModule
+    MatSelectModule,
+    MatExpansionModule
   ]
 })
 export class PublicModule { }

@@ -14,8 +14,8 @@ const routes: Routes = [
   {
     path: 'protected',
     loadChildren: () => import('./protected/protected.module').then( m => m.ProtectedModule ),
-    // canActivate: [ValidarTokenGuard],
-    // canLoad: [ValidarTokenGuard]
+    canActivate: [ValidarTokenGuard],
+    canLoad: [ValidarTokenGuard]
   },
   {
     path:'**',

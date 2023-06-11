@@ -20,6 +20,7 @@ import { GestionReservasComponent } from './pages/gestion-reservas/gestion-reser
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { GestionUsuariosComponent } from './pages/gestion-usuarios/gestion-usuarios.component';
 
 
 
@@ -31,7 +32,8 @@ import { MatInputModule } from '@angular/material/input';
     MainComponent,
     AddPistaComponent,
     GestionDeportesComponent,
-    GestionReservasComponent
+    GestionReservasComponent,
+    GestionUsuariosComponent
   ],
   imports: [
     CommonModule,

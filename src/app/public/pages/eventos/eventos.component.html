@@ -1,33 +1,40 @@
-<div class="event-filters">
-    <mat-form-field appearance="fill">
-      <mat-label>Buscar eventos</mat-label>
-      <input matInput placeholder="Nombre del evento">
-    </mat-form-field>
-  
-    <mat-form-field appearance="fill">
-      <mat-label>Fecha del evento</mat-label>
-      <input matInput [matDatepicker]="picker">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  
-    <mat-form-field appearance="fill">
-      <mat-label>Ubicación</mat-label>
-      <mat-select placeholder="Todas las ubicaciones">
-        <mat-option value="piscina">Piscina Olímpica</mat-option>
-        <mat-option value="cancha">Cancha de Fútbol</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-  
-  <mat-list>
-    <mat-list-item *ngFor="let event of events">
-      <mat-icon matListIcon>event</mat-icon>
-      <div matLine>{{ event.name }}</div>
-      <div matLine>{{ event.date | date }}</div>
-      <div matLine>{{ event.location }}</div>
-      <p>{{ event.description }}</p>
-      <button mat-raised-button color="primary">Más información</button>
-    </mat-list-item>
-  </mat-list>
-  
+<!-- Sección de introducción -->
+<div class="introduction">
+  <h1>Próximos eventos</h1>
+  <p class="intro">Bienvenido a nuestra página de eventos. Aquí encontrarás todos los próximos eventos que se celebrarán en nuestro polideportivo. Desde torneos deportivos hasta clases de fitness y eventos comunitarios, siempre hay algo emocionante sucediendo aquí.</p>
+</div>
+
+<!-- Sección de eventos -->
+<div class="events-container">
+  <h2>Eventos destacados</h2>
+  <mat-grid-list cols="2" rowHeight="500px" >
+    <mat-grid-tile *ngFor="let event of events">
+      <a >
+        <mat-card class="installation-card p-2">
+          <img mat-card-image [src]="event.image" alt="{{ event.name }}">
+          <mat-card-content>
+            <h2>{{ event.name }}</h2>
+            <p>{{ event.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </a>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+</div>
+
+<!-- Sección de preguntas frecuentes -->
+<div class="faq">
+  <h2>Preguntas frecuentes</h2>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          ¿Cómo puedo registrarme para un evento?
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>Puedes registrarte para un evento visitando nuestra recepción o contactándonos por teléfono o correo electrónico. Asegúrate de registrarte con antelación, ya que muchos de nuestros eventos se llenan rápido.</p>
+    </mat-expansion-panel>
+    <!-- Añade más paneles de expansión aquí para más preguntas -->
+  </mat-accordion>
+</div>

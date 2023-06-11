@@ -1,9 +1,16 @@
-/*!
-   * Bootstrap  v5.2.3 (https://getbootstrap.com/)
-   * Copyright 2011-2022 The Bootstrap Authors
-   * Copyright 2011-2022 Twitter, Inc.
-   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
-   */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex-shrink: 0;
+}
 :root {
   --bs-blue: #63B3ED;
   --bs-indigo: #596CFF;

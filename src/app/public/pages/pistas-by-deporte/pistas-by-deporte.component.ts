@@ -8,6 +8,8 @@ import { Pista, PistasResponse, Reserva } from '../../interfaces/pistas.interfac
 import { isEmpty } from 'rxjs';
 import { FormBuilder, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { Usuario } from 'src/app/auth/interfaces/interfaces';
 
 @Component({
   selector: 'app-pistas-by-deporte',
@@ -15,6 +17,11 @@ import Swal from 'sweetalert2';
   styleUrls: ['./pistas-by-deporte.component.css']
 })
 export class PistasByDeporteComponent implements OnInit {
+
+  usuario?: Usuario
+  validate:Boolean = false
+
+
   deporteId?: string;
   pistas?: PistasResponse;
   weekDays: string[] = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
@@ -33,7 +40,7 @@ export class PistasByDeporteComponent implements OnInit {
 
 
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private http: HttpClient, private sportsService: SportsService, private router: Router,) { }
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private http: HttpClient, private sportsService: SportsService, private router: Router, private authService: AuthService,) { }
 
   ngOnInit() {
     this.deporteId = this.route.snapshot.paramMap.get('_id')!
@@ -43,6 +50,9 @@ export class PistasByDeporteComponent implements OnInit {
 
         this.pistas = resp
       })
+
+      this.usuario = this.authService.usuario
+    this.authService.validarToken().subscribe( resp => this.validate =  resp)
 
   }
 
@@ -249,7 +259,7 @@ async reserve(day: string, hora: string, pista:Pista) {
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire('Reserva realizada con éxito', '', 'success').then(() => window.location.reload())
-      
+
     }
   });
 

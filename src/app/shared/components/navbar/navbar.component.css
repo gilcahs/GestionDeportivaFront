@@ -1,3 +1,12 @@
 .light-grey-toolbar {
   background: #d3d3d3 !important; /* Este es un ejemplo de color gris claro. Ajusta el color según tus necesidades. */
 }
+.spacer {
+  flex: 1 1 auto;
+}
+.btn-round {
+  border-radius: 50%;
+  padding: 10px;  /* Ajusta este valor para cambiar el tamaño del botón */
+}
+
+
