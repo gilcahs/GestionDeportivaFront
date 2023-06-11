@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 import { Deporte, Deportes } from '../interfaces/deporte.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -230,7 +230,7 @@ export class SportsService {
   patchDeporte(deporteId:string, body:any){
     const url = `${this.baseUrl}/deportes/${deporteId}`
     console.log(body);
-    
+
     return this.http.patch(url, body)
     .pipe(
       tap(resp => {
@@ -274,7 +274,7 @@ export class SportsService {
   deleteReserva(id: string){
     const url = `${this.baseUrl}/pistas/reservas/${id}`
     console.log(url);
-    
+
     return this.http.delete(url)
     .pipe(
       tap(resp => {
