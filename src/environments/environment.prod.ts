@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    baseUrl: 'https://yourUrl'
+    baseUrl: 'https://gestiondeportivaback-production.up.railway.app/api'
 }
